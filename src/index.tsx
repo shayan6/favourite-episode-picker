@@ -3,5 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import {StoreProvider} from './Store';
+import {Router, RouteComponentProps } from '@reach/router';
+import HomePage from './HomePage';
+import FavPage from './FavPage';
 
-ReactDOM.render(<StoreProvider><App /></StoreProvider>, document.getElementById('root'));
+const RouterPage = (props: {pageComponent: JSX.Element} & RouteComponentProps) => props.pageComponent
+
+ReactDOM.render(
+            <StoreProvider>
+                <Router>
+                    <App path='/' >
+                        <RouterPage pageComponent={<HomePage/>} path='/' />
+                        <RouterPage pageComponent={<FavPage/>} path='/FavPage' />
+                    </App>
+                </Router>
+            </StoreProvider>, document.getElementById('root')
+        );

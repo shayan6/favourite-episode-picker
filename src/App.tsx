@@ -1,68 +1,27 @@
 import React from 'react';
-import { IAction, IEpisode, IEpisodeProps } from "./interfaces";
 import {Store} from './Store';
 import {Link} from '@reach/router';
 
-const EpisodesList = React.lazy<any>(() => import('./EpisodesList') )
 
-export default function App():JSX.Element {
-
-  //function returning object value = {state, dispatch} which we take
-  const {state, dispatch} = React.useContext(Store);
-
-  // any time the state change, the function will run consistently so get rid of it we use hook useEffect
-  React.useEffect(() => {
-    state.episodes.length === 0 && fetchDataAction()
-  });
-
-  // fetch url
-  const fetchDataAction = async() => {
-    const data = await fetch('https://api.tvmaze.com/singlesearch/shows?q=rick-&-morty&embed=episodes')
-    const dataJSON = await data.json();
-    return dispatch({
-      type: 'FETCH_DATA',
-      payload: dataJSON._embedded.episodes
-    });
-  }
-
-  const toggleFavAction = (episode:IEpisode):IAction => {
-    if(state.favourites.includes(episode)){  
-      const favouriteWithoutEpisode = state.favourites.filter( (fav:IEpisode) => fav.id !== episode.id )
-      return dispatch({
-        type: 'REMOVE_FAV',
-        payload: favouriteWithoutEpisode
-      })      
-    }
-    return dispatch({
-      type: 'ADD_FAV',
-      payload: episode
-    })
-  }
+export default function App(props:any):JSX.Element {
   
-  const props:IEpisodeProps = {
-    episodes: state.episodes,
-    toggleFavAction,
-    favourites: state.favourites
-  }
+  //function returning object value = {state, dispatch} which we take
+  const {state} = React.useContext(Store);
 
   return (
     <React.Fragment>
-      {console.log(state)}
+      {console.log({state,props})}
       <header className="header">
         <div>
           <h1>Rick and Morty</h1>
           <p>Pick Your Favorite Episode</p>
         </div>
-        <div>
-          {/* <Link to='/'>Home</Link> */}
-          <Link to='/Faves'>Favourite(s): {state.favourites.length}</Link>
-        </div>
+        <h3>
+          <Link to='/'> {" "} Home {" "}</Link> &nbsp;
+          <Link to='/FavPage'> {" "} Favourite(s): {state.favourites.length} {" "}</Link>
+        </h3>
       </header>
-      <React.Suspense fallback={<div>loading...</div>}>
-        <section className="episode-layout">
-          <EpisodesList {...props} />
-        </section>
-      </React.Suspense>
+      {props.children}
     </React.Fragment>
   )
 }
