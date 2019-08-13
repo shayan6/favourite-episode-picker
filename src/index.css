@@ -9,6 +9,8 @@ body {
 }
 
 .episode-layout{
+  margin-left: 10%;
+  margin-right: 10%;
   display: flex;
   flex-wrap: wrap;
   min-width: 100vh;
@@ -22,7 +24,7 @@ body {
   justify-content: space-between;
   background: #efefef;
   border-bottom: 1px solid black;
-  padding: .5rem;
+  padding: .5rem 10% .5rem 10%;
   position: sticky;
   top: 0;
 }
